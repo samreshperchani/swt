@@ -28,23 +28,29 @@ node -v
 npm install -g yo gulp bower
 ```
 
-##### Install `generator-gulp-angular`:
+
+##### Install required dependencies:
 ```
-npm install -g generator-gulp-angular
+npm install & bower install
 ```
 
 
 ### Run
 
-##### Create a new directory, and go into:
+##### Checkout the code from Github
 ```
-mkdir my-new-project && cd $_
-```
-
-##### Run `yo gulp-angular`, and select desired technologies:
-```
-yo gulp-angular
+git clone https://...
 ```
 
+##### Run `gulp serve`, to open the app in the browser using live reload:
+```
+gulp serve
+```
+
+
+##### Build the project with simply typing `gulp`
+```
+gulp
+```
 
 
