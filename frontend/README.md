@@ -31,7 +31,8 @@ npm install -g yo gulp bower
 
 ##### Install required dependencies:
 ```
-npm install & bower install
+npm install
+bower install
 ```
 
 
