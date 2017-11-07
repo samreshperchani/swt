@@ -6,39 +6,21 @@
     .controller('MainController', MainController);
 
   /** @ngInject */
-  function MainController($timeout, webDevTec, toastr, $http) {
+  function MainController(toastr, $http) {
     var vm = this;
 
-    vm.awesomeThings = [];
     vm.chosenCategoryID = '';
-    vm.classAnimation = '';
-    vm.creationDate = 1509312974169;
     vm.showToastr = showToastr;
-
-    activate();
-
-    function activate() {
-      getWebDevTec();
-      $timeout(function() {
-        vm.classAnimation = 'rubberBand';
-      }, 4000);
-    }
 
     function showToastr() {
       toastr.info('Fork <a href="https://github.com/Swiip/generator-gulp-angular" target="_blank"><b>generator-gulp-angular</b></a>');
       vm.classAnimation = '';
     }
 
-    function getWebDevTec() {
-      vm.awesomeThings = webDevTec.getTec();
-
-      angular.forEach(vm.awesomeThings, function(awesomeThing) {
-        awesomeThing.rank = Math.random();
-      });
-    }
 
     var keyQuestionCounter = "questionCounter";
-    // localStorage.setItem(keyQuestionCounter, 0);
+    var keyQuestionCounterCorrect = "questionCounterCorrect";
+    var keyQuestionCounterWrong   = "questionCounterWrong";
 
     vm.question = '';
     vm.answers  = '';
@@ -48,24 +30,32 @@
     vm.correctAnswer = false;
     vm.wrongAnswer = false;
 
-
+    //Called when category is chosen, loads first question
     vm.chooseCategory = (function cC(catID) {
       console.log('chosen category: ' + catID);
       vm.chosenCategoryID = catID;
-      //todo load question
       vm.selectCategory = false;
-      loadQuestion();
+      vm.loadQuestion();
     });
 
-// loadQuestion();
 
-    function loadQuestion() {
-      vm.askQuestion = true;
+    vm.loadQuestion = (function loadQuestion() {
+      /* uncomment to reset statistics
+      localStorage.removeItem(keyQuestionCounterCorrect);
+      localStorage.removeItem(keyQuestionCounter);
+      localStorage.removeItem(keyQuestionCounterWrong);
+      */
+      console.log('load new question');
+      vm.askQuestion   = true;
+      vm.correctAnswer = false;
+      vm.wrongAnswer   = false;
       // Simple GET request example:
       $http({
         method: 'GET',
         url: 'app/main/'+vm.chosenCategoryID+'_samplequestion.json'
+       // url: 'http://134.155.234.95:8080/SWTBeatTheQuiz/service'
       }).then(function successCallback(response) {
+
           // this callback will be called asynchronously
           // when the response is available
           console.log(response.data['question']);
@@ -78,14 +68,7 @@
           console.log(response);
         });
 
-
-      // $.getJSON("app/main/1_samplequestion.json", function(json) {
-      //     console.log(json); // this will show the info it in firebug console
-      //     vm.question = json['question'];
-      //     vm.answers  = json['answers'];
-      //     vm.correct  = json['correct'];
-      // });
-    }
+    });
 
     vm.reset = (function reset() {
       console.log('reset');
@@ -101,20 +84,46 @@
 
     vm.validate = (function validate(id) {
       vm.selectedAnswer = id;
+
+      //As soon as answer is clicked, buttons are disabled and can't be clicked anymore
+      jQuery(".answers button").attr("disabled","disabled");
+      //Correct answer is given
       if (vm.correct == id) {
         console.log('correct');
         vm.correctAnswer = true;
         vm.wrongAnswer = false;
-        vm.askQuestion = false;
+        vm.askQuestion = true;
+        jQuery('.answers button.option-'+id).addClass('btn-success');
+
+        // Correct question counter
+        var questionCount= localStorage.getItem(keyQuestionCounterCorrect);
+        questionCount++;
+        console.log(questionCount);
+        localStorage.removeItem(keyQuestionCounterCorrect);
+        localStorage.setItem(keyQuestionCounterCorrect, questionCount);
+
       }
       else {
-        console.log('wrong!');
+        jQuery('.answers button.option-'+id).addClass('btn-danger');
+        //Flashes the correct answer for 2s after 800ms
+        setTimeout(function() {
+          jQuery('.answers button.option-'+vm.correct).addClass('btn-success flash-button');
+        }, 800);
+        setTimeout(function() {
+          jQuery('.answers button.option-'+vm.correct).removeClass('flash-button');
+        }, 2000);
+
         vm.correctAnswer = false;
         vm.wrongAnswer = true;
-        vm.askQuestion = false;
+        vm.askQuestion = true;
+
+        // Correct question counter
+        var questionCount= localStorage.getItem(keyQuestionCounterWrong);
+        questionCount++;
+        localStorage.removeItem(keyQuestionCounterWrong);
+        localStorage.setItem(keyQuestionCounterWrong, questionCount);
       }
 
-      // TODO question Counter
       var questionCount= localStorage.getItem(keyQuestionCounter);
       questionCount++;
       console.log(questionCount);
@@ -122,7 +131,7 @@
       localStorage.setItem(keyQuestionCounter, questionCount);
     });
 
-    /* New */
+    /* New */ //TODO get this from the server
     vm.categories = [
       {
         'id': 0,

@@ -35,20 +35,23 @@
    <p class="lead">{{main.question}}</p>
     <hr>
    <!-- Answers -->
-   <div ng-repeat="answer in main.answers">
-     <button type="button" class="btn btn-outline-primary btn-block" ng-click="main.validate(answer.id)">{{answer.text}}</button>
+   <div class="answers" ng-repeat="answer in main.answers">
+     <button type="button" class="btn btn-outline-primary btn-block option-{{answer.id}}" ng-click="main.validate(answer.id)">{{answer.text}}</button>
      <p></p>
    </div>
    </div>
-  <div ng-if="main.correctAnswer">
-   <div class="alert alert-success" role="alert" >
+
+
+  <!-- answer boxes, here comes the information -->
+  <div class="answerbox alert alert-success" role="alert" ng-if="main.correctAnswer">
       <strong>Well done!</strong> You answered the question correctly.
-   </div>
-    <button class="btn btn-success" ng-click="main.reset()">Next</button>
+     <!-- TODO description here -->
+     <button type="button" class="btn btn-success pull-right" ng-click="main.loadQuestion()">Next</button>
   </div>
- <div class="alert alert-danger" role="alert" ng-if="main.wrongAnswer">
+
+ <div class="answerbox alert alert-danger" role="alert" ng-if="main.wrongAnswer">
     <strong>Sorry, that's not correct. {{main.answers[main.selectedAnswer-1].description}}</strong>
-    <button class="btn btn-fail" ng-click="main.reset()">Try again</button>
+    <button class="btn btn-fail pull-right" ng-click="main.reset()">Try again</button>
  </div>
 
 
