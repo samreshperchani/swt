@@ -3,11 +3,14 @@
   <div>
     <acme-navbar creation-date="main.creationDate"></acme-navbar>
   </div>
-
+  <h1>Game Statistics</h1>
   <div class="jumbotron">
-        <h3>Answered Questions: <strong> {{main.answeredQuestions}} </strong> </h3>
+    <h4>Answered Questions: <strong> {{main.answeredQuestions}} </strong> </h4>
+    <h4>Correct answers:    <strong> {{main.answeredQuestionsCorrect}} </strong> </h4>
+    <h4>Wrong answers:      <strong> {{main.answeredQuestionsWrong}} </strong> </h4>
   </div>
 
+  <canvas id="barChart">Canvas can't be displayed</canvas>
 
   <!--<div class="row">-->
     <!--<div class="col-sm-6 col-md-4" ng-repeat="awesomeThing in main.awesomeThings | orderBy:'rank'">-->
