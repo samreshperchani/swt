@@ -12,11 +12,6 @@
         controller: 'MainController',
         controllerAs: 'main'
       })
-      .when('/categorySelect', {
-        templateUrl: 'app/main/quizpage.html',
-        controller: 'MainController',
-        controllerAs: 'main'
-      })
       .when('/stats', {
         templateUrl: 'app/main/statistics.html',
         controller: 'StatsController',
